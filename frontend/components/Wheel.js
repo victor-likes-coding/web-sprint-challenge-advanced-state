@@ -2,26 +2,26 @@ import React from "react";
 import { connect } from "react-redux";
 import { moveClockwise, moveCounterClockwise } from "../state/action-creators";
 
-const mapStateToProps = (state) => {
+const mapStateToProps = ({ wheel }) => {
     return {
-        count: state.wheel.count,
+        wheel,
     };
 };
 
 export default connect(mapStateToProps, {
     moveClockwise,
     moveCounterClockwise,
-})(function Wheel({ count, moveClockwise, moveCounterClockwise }) {
+})(function Wheel({ wheel, moveClockwise, moveCounterClockwise }) {
     return (
         <div id="wrapper">
             <div id="wheel">
                 {[0, 1, 2, 3, 4, 5].map((i) => {
                     return (
                         <div
-                            className={`cog ${count === i ? "active" : ""}`}
+                            className={`cog ${wheel === i ? "active" : ""}`}
                             style={{ "--i": i }}
                             key={i}>
-                            {i === count && "B"}
+                            {i === wheel && "B"}
                         </div>
                     );
                 })}
