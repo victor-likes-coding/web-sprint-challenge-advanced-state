@@ -2,17 +2,23 @@ import React, { useEffect } from "react";
 import { fetchQuiz, postAnswer, selectAnswer } from "../state/action-creators";
 import { connect } from "react-redux";
 
-const mapStateToProps = ({ quiz, selectedAnswer }) => {
+const mapStateToProps = ({ quiz, selectedAnswer, infoMessage }) => {
     return {
         quiz,
         selectedAnswer,
+        infoMessage,
     };
 };
 
 export default connect(mapStateToProps, { fetchQuiz, selectAnswer, postAnswer })(function Quiz({ fetchQuiz, quiz, selectAnswer, selectedAnswer, postAnswer }) {
+    const isDisabled = selectedAnswer === null;
+
     useEffect(() => {
-        fetchQuiz();
-    }, []);
+        // Only fetch the quiz if it hasn't been loaded yet
+        if (!quiz) {
+            fetchQuiz();
+        }
+    }, [fetchQuiz, quiz]);
 
     const answers = quiz?.answers.map((answer, i) => {
         return (
@@ -36,7 +42,8 @@ export default connect(mapStateToProps, { fetchQuiz, selectAnswer, postAnswer })
                             id="submitAnswerBtn"
                             onClick={() => {
                                 postAnswer({ answer_id: selectedAnswer, quiz_id: quiz.quiz_id });
-                            }}>
+                            }}
+                            disabled={isDisabled}>
                             Submit answer
                         </button>
                     </>
